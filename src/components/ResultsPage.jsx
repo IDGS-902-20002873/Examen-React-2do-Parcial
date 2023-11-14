@@ -16,10 +16,13 @@ const ResultsPage = () => {
           <strong>{`${name}`}</strong>
         </div>
       );
-    else if (datosFiltrados.length > 0) {
+    else if (datosFiltrados.length > 0 && name == undefined) {
+      return <h4>Resultados de la búsqueda: {datosFiltrados.length}</h4>;
+    } else {
       return (
         <h4>
-          Resultados de la búsqueda de {`${name}`}: {datosFiltrados.length}
+          Resultados de la búsqueda de <strong>{`${name}`}</strong> :{" "}
+          {datosFiltrados.length}
         </h4>
       );
     }
@@ -37,9 +40,15 @@ const ResultsPage = () => {
     obtenerDatos();
   }, []);
 
-  const datosFiltrados = datos.filter((producto) =>
-    producto.title.toLowerCase().includes(name.toLowerCase())
-  );
+  const datosFiltrados = () => {
+    if (name != undefined) {
+      return datos.filter((producto) =>
+        producto.title.toLowerCase().includes(name.toLowerCase())
+      );
+    } else {
+      return datos;
+    }
+  };
 
   const handleInputChange = (nuevoValor) => {
     setFiltro(nuevoValor);
@@ -69,12 +78,12 @@ const ResultsPage = () => {
         </div>
       </div>
       <div className="row m-3">
-        <div className="col-md-12">{message(name, datosFiltrados)}</div>
+        <div className="col-md-12">{message(name, datosFiltrados())}</div>
       </div>
       <div className="row m-3">
         <div className="col-md-12">
           <div className="list-group">
-            {datosFiltrados.map((producto) => (
+            {datosFiltrados().map((producto) => (
               <Link
                 to={`/detail/${producto.id}`}
                 className="list-group-item list-group-item-action"
